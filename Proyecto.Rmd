@@ -1,0 +1,541 @@
+---
+title: "Proyecto"
+author: "Mariana Brizuela"
+date: "5/9/2022"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Librerías y base de datos
+```{r}
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(treemap)
+library(gridExtra)
+library(scales)
+datos<- read_xlsx("base.xlsx")
+```
+                                                    EDA
+                                        ## VARIABLES NO DEMOGRÁFICAS
+1. Ciclo ***
+```{r}
+ciclo<-subset(datos,ciclo!="Sin datos")
+g_1<-ggplot(ciclo, aes(x=ciclo)) + geom_bar(color="black", fill="lightgreen") +
+                           ggtitle("Ciclo") +
+                           xlab("") +
+                           ylab("") +
+                          theme(plot.title = element_text(hjust = 0.5))
+g_1
+```
+
+2. Año de inscripción ***
+```{r}
+anno<-datos$aÑo
+ano<-datos %>%
+      group_by(aÑo) %>%
+      summarise(n = n()) %>%
+      mutate(Freq = n/sum(n))
+
+g_2<-ggplot(datos, aes(x=anno)) + geom_histogram(color="black", fill="pink",bins=4) +
+                           xlab("") +
+                           ylab("Frecuencia") + 
+                           ggtitle("Año de inscripción")+
+                          theme(plot.title = element_text(hjust = 0.5))
+g_2
+```
+    aÑo   n    Freq
+1  2015  1258 0.253
+2  2016  1205 0.242
+3  2017  1326 0.266
+4  2018  1192 0.239
+
+
+3. Estado ***
+```{r}
+est<-subset(datos,estado!="Sin datos")
+g_3<-ggplot(est, aes(x=estado)) + geom_bar(color="black", fill="salmon") +
+                           ggtitle("Estado") +
+                           xlab("") +
+                           ylab("") +
+                           theme(axis.text.y = element_text(hjust=1,size=5))
+  
+g_3<-g_3+ coord_flip()
+```
+
+
+4. Municipio - IRRELEVANTE
+```{r}
+mun<-datos$MUNICIPIO
+muni<-datos %>%
+      group_by(MUNICIPIO) %>%
+      summarise(n = n()) %>%
+      mutate(Freq = n/sum(n))
+
+munis<-muni$MUNICIPIO
+freqq<-muni$Freq
+municipios<-data_frame(munis,freqq)
+municipioss<-as.data.frame(municipios)
+treemap(municipioss,index = "munis",vSize="freqq")
+
+#ggplot(datos, aes(x=mun)) + geom_bar(color="black", fill="blue") +
+#                           xlab("Municipio") +
+#                           ylab("Frecuencia") + 
+#                           ggtitle("Histograma de Municipio")
+```
+
+5. CURP - IRRELEVANTE
+
+6. Sexo
+```{r}
+sexo<-datos$Sexo
+#ggplot(datos, aes(x=sexo)) + geom_bar(color="black", fill="lightblue") +
+#                           xlab("Sexo") +
+#                           ylab("Frecuencia") + 
+#                           ggtitle("Histograma de Sexo")
+
+df <- data.frame(
+  group = c("Femenino","Masculino"),
+  value = c(2137,2844 )
+  )
+bp<- ggplot(df, aes(x="", y=value, fill=group)) +
+     geom_bar(width = 1, stat = "identity")
+
+pie <- bp + coord_polar("y", start=0)
+
+g_6<-pie + scale_fill_brewer("") + theme_bw() +
+  theme(axis.text.x=element_blank())+
+  geom_text(aes(y = value/3 + c(0, cumsum(value)[-length(value)]), 
+                label = percent(value/4981)), size=3)+
+  ggtitle("Porcentaje de sexo")
+g_6
+```
+Femenino Masculino 
+     2137      2844 
+
+7. Vigencia ***
+```{r}
+vig<-subset(datos,vigencia_clv!="Sin datos")
+g_7<-ggplot(vig, aes(x=vigencia_clv)) + geom_bar(color="black", fill="mistyrose") +
+                           ggtitle("Vigencia") +
+                           xlab("") +
+                           ylab("") 
+g_7
+```
+
+8. Matrícula - IRRELEVANTE
+
+RESUMEN VARIABLES INFORMATIVAS:
+```{r}
+grid.arrange(g_1, g_2, g_3, g_6,g_7, nrow=2)
+```
+                                     
+                                          ## VARIABLES CALIFICACIONES
+                                          
+```{r}
+
+```
+                                          
+
+                                          ## VARIABLES DEMOGRÁFICAS
+                                          
+```{r}
+grid.arrange(g1, g5, g6, g7, g10, g15, nrow=2) #trabajo actual
+grid.arrange(g17, g25, g30, g33, g40, g42, nrow=2) #todas jajajajjaja
+grid.arrange(g52, g55, g53, nrow=2)
+```
+
+1. Secundaria pública o privada ***
+```{r}
+pp<-subset(datos,`1-publica-privada`!="Sin datos")
+g1<-ggplot(pp, aes(x=`1-publica-privada`)) + geom_bar(color="black", fill="gray") +
+                           ggtitle("Secundaria pública o privada") +
+                           xlab("") +
+                           ylab("") 
+g1
+```
+
+3. Preparatoria pública o privada -VACÍA
+```{r}
+#preparatoria<-subset(datos,SOC3!="Sin datos")
+#g3<-ggplot(preparatoria, aes(x=SOC3)) + geom_bar(color="black", fill="gray") +
+#                           xlab("Preparatoria pública o privada") +
+#                           ylab("Frecuencia") 
+#g3
+```
+
+5. Inscripción Previa ***
+```{r}
+ins<-subset(datos,`5-inscripcion`!="Sin datos")
+g5<-ggplot(ins, aes(x=`5-inscripcion`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                           ggtitle("Inscripción previa")
+g5
+```
+
+6. Grado de la baja
+```{r}
+grado<-subset(datos,`6-grado-baja`!="Sin datos")
+g6<-ggplot(grado, aes(x=`6-grado-baja`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") + 
+                           ggtitle("Grado en que se cuasó la baja") 
+                           #theme(axis.text.x = element_text( angle = 10,hjust=1,size=5))
+g6
+```
+
+
+7. Motivo Baja***
+```{r}
+motivo<-subset(datos,`7-motivo-baja`!="Sin datos")
+g7<-ggplot(motivo, aes(x=`7-motivo-baja`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") + 
+                           ggtitle("Motivo de la baja") +
+                           theme(axis.text.x = element_text( angle = 10,hjust=1,size=5))
+g7
+```
+
+9. Lengua indígena hablada por el entrevistado
+```{r}
+lengua<-subset(datos,`9-lengua`!="Sin datos")
+g9<-ggplot(lengua, aes(x=`9-lengua`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                          ggtitle("Lengua indígena hablada por el entrevistado")+
+                           ylab("Frecuencia") 
+g9
+```
+
+10. Trabajo actual
+```{r}
+trabajo<-subset(datos,`10-trabajo-actual`!="Sin datos")
+g10<-ggplot(trabajo, aes(x=`10-trabajo-actual`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") + 
+                           ggtitle("Trabajo Actual")+
+                           theme(axis.text.x = element_text(angle = 15, hjust=1,size=5))
+
+g10
+```
+
+11. Padres vivos
+```{r}
+pv<-subset(datos,`11-padres-vivos`!="Sin datos")
+g11<-ggplot(pv, aes(x=`11-padres-vivos`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") + 
+                           ggtitle("Padres vivos")+
+                           theme(axis.text.x = element_text(angle = 15, hjust=1,size=6))
+g11
+```
+
+13. Jefe en comunidad indígena
+```{r}
+indi<-subset(datos,`13-jefe-indigena`!="Sin datos")
+g13<-ggplot(indi, aes(x=`13-jefe-indigena`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia")+
+                           ggtitle("Jefe de familia perteneciente a una comunidad indígena")
+g13
+```
+
+15. Máximo nivel de estudios del jefe de la familia ***
+```{r}
+maxjefe<-subset(datos,`15-maximo-estudio`!="Sin datos")
+g15<-ggplot(maxjefe, aes(x=`15-maximo-estudio`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") + 
+                           ggtitle("Máximo nivel de estudios del jefe de la familia")+
+                           theme(axis.text.x = element_text(angle = 15, hjust=1,size=5))
+g15
+```
+
+17. Empleo de jefe de familia ***
+```{r}
+empleojefe<-subset(datos,`17-empleo-jefe`!="Sin datos")
+g17<-ggplot(empleojefe, aes(x=`17-empleo-jefe`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") + 
+                          ggtitle("Empleo de jefe de familia")+
+                           theme(axis.text.x = element_text(angle = 20, hjust=1,size=5))
+g17
+```
+
+19. Trabajo realizado en gobierno o particular
+```{r}
+partgob<-subset(datos,`19-gobierno-particular`!="Sin datos")
+g19<-ggplot(partgob, aes(x=`19-gobierno-particular`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                            ggtitle("Trabajo realizado en gobierno o particular")+
+                           ylab("Frecuencia") 
+g19
+```
+
+21. Principal actividad del jefe de familia
+```{r}
+actividad<-subset(datos,`21-actividad-jefe`!="Sin datos")
+g21<-ggplot(actividad, aes(x=`21-actividad-jefe`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                           ggtitle("Principal actividad del jefe de familia")
+                           #theme(axis.text.x = element_text(angle = 15, hjust = 1,size=5))
+g21
+```
+
+23. Número de hectareas cultivadas si el padre es agrícola
+```{r}
+hectareas<-subset(datos,`23-hectareas`!="Sin datos")
+g23<-ggplot(hectareas, aes(x=`23-hectareas`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                          ggtitle("Número de hectareas cultivadas si el padre es agrícola")
+                           #theme(axis.text.x = element_text(angle = 80))
+g23
+```
+
+25. Ascenso de ingreso total mensual del jefe de familia
+```{r}
+ascensojefe<-subset(datos,`25-ascenso`!="Sin datos")
+g25<-ggplot(ascensojefe, aes(x=`25-ascenso`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") + 
+                            ggtitle("scenso de ingreso total mensual del jefe de familia")+
+                           theme(axis.text.x = element_text(angle = 15, hjust=1))
+g25
+```
+
+27. Maximo nivel de estudios de la pareja del jefe de familia
+```{r}
+maximopareja<-subset(datos,`27-maximo-pareja`!="Sin datos")
+g27<-ggplot(maximopareja, aes(x=`27-maximo-pareja`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") + 
+                          ggtitle("Maximo nivel de estudios de la pareja del jefe de familia")+
+                           theme(axis.text.x = element_text(angle = 15, hjust=1,size=6))
+g27
+```
+
+29. Antiguedad del puesto de la pareja del jefe de familia
+```{r}
+antiguedadpareja<-subset(datos,`29-antigüedad-puesto`!="Sin datos")
+g29<-ggplot(antiguedadpareja, aes(x=`29-antigüedad-puesto`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                          ggtitle("Antiguedad del puesto de la pareja del jefe de familia")+
+                           ylab("Frecuencia") +
+                           theme(axis.text.x = element_text(angle = 15, hjust=1,size=8))
+g29
+```
+
+30. Ascenso de ingreso total mensual de la pareja del jefe de familia
+```{r}
+parejaasc<-subset(datos,`30-ascenso-pareja`!="Sin datos")
+g30<-ggplot(parejaasc, aes(x=`30-ascenso-pareja`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ggtitle("Ascenso de ingreso total mensual de la pareja del jefe de familia")+
+                           ylab("Frecuencia") +
+                           theme(axis.text.x = element_text(angle = 15, hjust=1,size=8))
+g30<-g30+coord_flip()
+g30
+```
+
+
+31. Ascenso total mensual de la familia
+```{r}
+ascensototal<-subset(datos,`31-ascenso`!="Sin datos")
+g31<-ggplot(ascensototal, aes(x=`31-ascenso`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                            ggtitle("Ascenso total mensual de la familia")+
+                           theme(axis.text.x = element_text(angle = 20, hjust=1))
+g31
+```
+
+33. Hermanos ya inscritos en la universidad ***
+```{r}
+hermanos<-subset(datos,`33-hermanos-universidad`!="Sin datos")
+g33<-ggplot(hermanos, aes(x=`33-hermanos-universidad`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia")+
+                           ggtitle("Hermanos ya inscritos en la universidad")+
+                           theme(axis.text.x = element_text(angle = 10, hjust=1,size=6))
+g33
+```
+
+35. Persona quien provee del servicio médico
+```{r}
+servicio<-subset(datos,`35-servicio-médico`!="Sin datos")
+g35<-ggplot(servicio, aes(x=`35-servicio-médico`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                            ggtitle("Persona quien provee del servicio médico")
+                           #theme(axis.text.x = element_text(angle = 45, hjust=1))
+g35
+```
+
+37. Tipo de vivienda
+```{r}
+vivienda<-subset(datos,`37-vivienda`!="Sin datos")
+g37<-ggplot(vivienda, aes(x=`37-vivienda`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                            ggtitle("Tipo de vivienda")+
+                           theme(axis.text.x = element_text(angle = 15, hjust=1,size = 6))
+g37
+```
+
+39. Vivienda compartida
+```{r}
+viviendacomp<-subset(datos,`39-vivienda-compartida`!="Sin datos")
+g39<-ggplot(viviendacomp, aes(x=`39-vivienda-compartida`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                          ggtitle("Vivienda compartida")
+                           #theme(axis.text.x = element_text(angle = 45, hjust=1))
+g39
+```
+
+40. Energía eléctrica en la vivienda 
+```{r}
+energia<-subset(datos,`40-energia-elec`!="Sin datos")
+g40<-ggplot(energia, aes(x=`40-energia-elec`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                            ggtitle("Energía eléctrica en la vivienda")
+                           #theme(axis.text.x = element_text(angle = 45, hjust=1))
+g40
+```
+
+
+41. Manera en la que se obtiene energía eléctrica
+```{r}
+manera<-subset(datos,`41-manera`!="Sin datos")
+g41<-ggplot(manera, aes(x=`41-manera`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                            ggtitle("Manera en la que se obtiene energía eléctrica")
+                           #theme(axis.text.x = element_text(angle = 45, hjust=1))
+g41
+```
+
+42. Obtención de agua
+```{r}
+agua<-subset(datos,`42-agua`!="Sin datos")
+g42<-ggplot(agua, aes(x=`42-agua`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                            ggtitle("Obtención de agua")
+                           #theme(axis.text.x = element_text(angle = 45, hjust=1))
+g42<-g42+coord_flip()
+```
+
+
+43. Vivienda cuenta con drenaje
+```{r}
+drenaje<-subset(datos,`43-drenaje`!="Sin datos")
+g43<-ggplot(drenaje, aes(x=`43-drenaje`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                            ggtitle("Vivienda cuenta con drenaje")+
+                           theme(axis.text.x = element_text(angle = 10, hjust=1,size=6))
+g43
+```
+
+45. Material del piso
+```{r}
+materialpiso<-subset(datos,`45-pisos`!="Sin datos")
+g45<-ggplot(materialpiso, aes(x=`45-pisos`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                           ggtitle("Material del piso")
+                           #theme(axis.text.x = element_text(angle = 10, hjust=1))
+g45
+```
+
+47. Número de dormitorios
+```{r}
+dormitorios<-subset(datos,`47-cuartos`!="Sin datos")
+g47<-ggplot(dormitorios, aes(x=`47-cuartos`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                           ggtitle("Número de dormitorios")
+                           #theme(axis.text.x = element_text(angle = 45, hjust=1))
+g47
+```
+
+49. Algún familiar cuenta con celular
+```{r}
+celular<-subset(datos,`49-telefono`!="Sin datos")
+g49<-ggplot(celular, aes(x=`49-telefono`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                           ggtitle("Algún familiar cuenta con celular")
+                           #theme(axis.text.x = element_text(angle = 45, hjust=1))
+g49
+```
+
+51. Acceso a servicio de televisión de paga
+```{r}
+tele<-subset(datos,`51-tele`!="Sin datos")
+g51<-ggplot(tele, aes(x=`51-tele`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                           ggtitle("Acceso a servicio de televisión de paga")
+                           #theme(axis.text.x = element_text(angle = 45, hjust=1))
+g51
+```
+
+52. Internet
+```{r}
+internet<-subset(datos,`52-internet`!="Sin datos")
+g52<-ggplot(internet, aes(x=`52-internet`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                           ggtitle("Acceso a servicio de internet")
+                           #theme(axis.text.x = element_text(angle = 45, hjust=1))
+g52
+```
+
+
+53. Vehículos automotores poseídos **
+```{r}
+coche<-subset(datos,`53-coche`!="Sin datos")
+g53<-ggplot(coche, aes(x=`53-coche`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                           ggtitle("Vehículos automotores poseídos")
+                           #theme(axis.text.x = element_text(angle = 45, hjust=1))
+g53
+```
+
+55. Ubicación de domicilio familiar
+```{r}
+domicilio<-subset(datos,`55-domicilio`!="Sin datos")
+g55<-ggplot(domicilio, aes(x=`55-domicilio`)) + geom_bar(color="black", fill="gray") +
+                           xlab("") +
+                           ylab("Frecuencia") +
+                           ggtitle("Ubicación de domicilio familiar")+
+                           theme(axis.text.x = element_text(angle = 5, hjust=1,size=5))
+g55
+```
+
+57. Lengua hablada en la comunidad
+```{r}
+lencom<-subset(datos,`57-lenguas`!="Sin datos")
+g57<-ggplot(lencom, aes(x=`57-lenguas`)) + geom_bar(color="black", fill="gray") +
+                           xlab(" Lengua hablada en la comunidad") +
+                           ylab("Frecuencia") 
+                           #theme(axis.text.x = element_text(angle = 45, hjust=1))
+g57
+```
+
+```{r}
+par(mfrow=c(2,2))
+grid.arrange(g5, g7, g9, g11,g13,g15,g17,g19,g21, nrow=3)
+```
+
