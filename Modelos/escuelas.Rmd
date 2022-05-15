@@ -1,0 +1,202 @@
+---
+title: "escuelas"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+install.packages("DataExplorer")
+install.packages("skimr")
+install.packages("readr")
+install.packages("tidyverse")
+```
+
+```{r}
+install.packages("readxl")
+install.packages("haven")
+```
+
+```{r}
+library(DataExplorer)
+#library(skimr)
+library(haven)
+```
+
+
+```{r}
+library( dplyr )
+library( knitr )
+```
+
+
+```{r}
+data <- haven::read_dta("./2022-04-25-BD-Prepa-UACh.dta")
+``` 
+
+```{r}
+create_report(data)
+```
+
+```{r}
+head(data)
+```
+
+
+```{r}
+seq(1,length(data),by=2)
+```
+
+
+
+```{r}
+lista <- c(seq(1,length(data),by=2))
+lista
+variables_nones <- data[lista]
+```
+
+```{r}
+summary(variables_nones)
+```
+
+```{r}
+create_report(variables_nones)
+```
+
+
+```{r}
+summary(variables_nones$QUIM_III)
+```
+
+```{r}
+table(variables_nones$QUIM_III, useNA='always')
+
+
+```
+
+```{r}
+library(readxl)
+library(tidyverse)
+library(R2OpenBUGS)
+```
+
+
+```{r}
+cve_calif <- read_excel("./CLAVES-CALIFICACIONES.xlsx")
+
+```
+
+
+```{r}
+ cve_calif %>% 
+  group_by(cve_calif$AÑO, cve_calif$SEM) 
+  
+```
+
+
+
+```{r}
+lista_mat[[1]] <- list(filter(cve_calif, AÑO == 1, SEM == 1) %>% .$`NOMBRE EN BD`)
+lista_mat[[2]] <- list(filter(cve_calif, AÑO == 1, SEM == 2) %>% .$`NOMBRE EN BD`)
+lista_mat[[3]] <- list(filter(cve_calif, AÑO == 2, SEM == 1) %>% .$`NOMBRE EN BD`)
+lista_mat[[4]] <- list(filter(cve_calif, AÑO == 2, SEM == 2) %>% .$`NOMBRE EN BD`)
+lista_mat[[5]] <- list(filter(cve_calif, AÑO == 3, SEM == 1) %>% .$`NOMBRE EN BD`)
+lista_mat[[6]] <- list(filter(cve_calif, AÑO == 3, SEM == 2) %>% .$`NOMBRE EN BD`)
+```
+
+
+```{r}
+sum <- data.frame(matrix(ncol = 6, nrow = nrow(data)))
+column_names <- c("sem_1", "sem_2", "sem_3", "sem_4", "sem_5", "sem_6" )
+colnames(sum) <- column_names
+```
+
+
+```{r}
+for (i in 1:6) {
+  for (j in lista_mat[[i]]){
+    sum[i] <- (rowSums(data[,j],na.rm = TRUE)/length(j))
+  }
+}
+```
+
+```{r}
+data <- data %>% 
+  mutate( sum )
+```
+
+```{r}
+calif_sem <- sum 
+```
+
+
+```{r}
+calif_sem <- calif_sem %>% 
+  mutate( estado = data$estado, sexo = data$sexo, vigencia_clv = data$vigencia_clv )
+```
+
+
+```{r}
+create_report(calif_sem)
+```
+
+```{r}
+calif_sem %>% 
+  group_by( estado ) %>%  
+  summarise(avg_calif=mean(sem_1)) %>%  
+  arrange( desc(avg_calif) ) %>%  
+  kable( caption = "Promedio por semestre 1" ) 
+```
+
+```{r}
+calif_sem %>% 
+  group_by( estado, vigencia_clv ) %>%  
+  tally() %>%  
+  arrange( desc(estado, vigencia_clv) ) %>%  
+  kable( caption = "vigencia por estado" ) 
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+df %>% # del data frame completo
+  filter( year == 2000 ) %>%  # selecciona los registros del año 2000
+  summarise( Poblacion = sum( pobHom, pobMuj ) ) %>%  # suma todos los datos de las dos variables
+  kable( caption = "Población Región de Murcia (2000)" ) # mostrar el resultado en una tabla
+```
+
+
+```{r}
+df %>% # del data frame completo
+  group_by( Mun ) %>%  # para cada municipio
+  filter( year == 2000 ) %>%  # selecciona los registros del año 2000
+  summarise( Poblacion = sum( pobHom, pobMuj ) ) %>%  # suma todos los datos de las dos variables
+  arrange( desc(Poblacion) ) %>%  # en orden descendente por la Población
+  kable( caption = "Población en los Municipios (2000)" ) # mostrar el resultado en una tabla
+```
+
+
+```{r}
+df <- # para guardar la nueva variable, se 'asigna' al df  
+  df %>% # del data frame completo
+  mutate( pobTotal = pobHom + pobMuj ) # crea una nueva variable pobTotal que sea la suma de hombres y mujeres
+```
+
+
+```{r}
+df %>% # del data frame completo
+  filter( Mun == "Cieza" ) %>%  # filtra por Cieza
+  summarise( Total = mean(pobTotal), Hombres = mean(pobHom), Mujeres = mean(pobMuj) ) %>% # haz la media de esas variables
+  kable( caption = "Medias poblacionales", digits = 2 ) # presenta el resultado en una tabla
+```
+
+
+
+
