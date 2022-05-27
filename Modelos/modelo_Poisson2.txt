@@ -1,0 +1,39 @@
+model
+{
+#Likelihood
+for (i in 1:n) {
+	y[i] ~ dpois(mu[i])
+	mu[i]<-theta[i]*ne[i]
+	log(theta[i])<-alpha+beta[S[i]]+gama[I[i]]+delta[H[i]]+eta[A[i]]+nu[T[i]]
+}
+#Priors 
+alpha ~ dnorm(0,0.001)
+for (j in 1:2) { 
+	beta[j] ~ dnorm(0,0.001) 
+	delta[j] ~ dnorm(0,0.001)
+	eta[j] ~ dgamma(0.001,0.001)
+	nu[j] ~ dgamma(0.001,0.001) 
+}
+
+for (k in 1:8) { 
+	gama[k] ~ dnorm(0,0.001) 
+}
+
+
+#Prediction 1
+for (i in 1:n) { yf1[i] ~ dpois(mu[i]) }
+
+#Estimable quantities
+alpha.adj <- alpha+mean(beta[])+mean(gama[])+mean(delta[])+mean(eta[])+mean(nu[])
+for (j in 1:2) { 
+	beta.adj[j] <- beta[j]-mean(beta[])
+	delta.adj[j] <- delta[j]-mean(delta[])
+	eta.adj[j] <- eta[j]-mean(eta[])
+	nu.adj[j] <- nu[j]-mean(nu[])
+}
+
+for (k in 1:8) { 
+	gama.adj[k] <- gama[k]-mean(gama[])
+}
+
+}
