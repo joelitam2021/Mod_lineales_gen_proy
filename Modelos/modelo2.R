@@ -11,14 +11,12 @@ prob<-function(x){
 }
 
 #-Lectura de datos-
-base <- read_excel("./2022-04-25-BDUACh_v2.xlsx")
+base <- read_excel("./Data/2022-04-25-BDUACh_v2.xlsx")
 
     
  estudiantes <- base |> 
                  group_by(cve_sexo,Sec,nivel_ingresos,Aprobar,piso_de_tierra) |> 
                  count()        
-    
-    
  estudiantes_vig <- base |> 
       group_by(cve_sexo,Sec,nivel_ingresos,Aprobar,piso_de_tierra) |> 
       count(vigencia) |> 
@@ -67,7 +65,7 @@ pars<-c("alpha.adj","beta.adj","gama.adj", "delta.adj",
 #-Running code-
 #OpenBUGS
 ej.sim<-bugs(data,inits,pars,model.file="modelo_Poisson2.txt",
-               n.iter=50000,n.chains=2,n.burnin=5000)
+               n.iter=50000,n.chains=2,n.burnin=5000, debug = TRUE)
 
 
 #Traza de la cadena

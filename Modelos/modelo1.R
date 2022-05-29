@@ -11,7 +11,7 @@ prob<-function(x){
 }
 
 #-Lectura de datos-
-base <- read_excel("./2022-04-25-BDUACh_v2.xlsx")
+base <- read_excel("./Data/2022-04-25-BDUACh_v2.xlsx")
 
     
  estudiantes <- base |> 
@@ -61,7 +61,7 @@ pars<-c("alpha.adj","beta.adj","gama.adj", "delta.adj", "yf1")
 #-Running code-
 #OpenBUGS
 ej.sim<-bugs(data,inits,pars,model.file="modelo_Poisson.txt",
-               n.iter=50000,n.chains=2,n.burnin=5000)
+               n.iter=50000,n.chains=2,n.burnin=5000, debug = TRUE)
 
 
 #Traza de la cadena
@@ -84,3 +84,4 @@ print(out.sum.t)
 #OpenBUGS
 out.dic<-ej.sim$DIC
 print(out.dic)
+

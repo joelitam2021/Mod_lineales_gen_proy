@@ -34,7 +34,7 @@ library( knitr )
 
 
 ```{r}
-data <- haven::read_dta("./2022-04-25-BD-Prepa-UACh.dta")
+data <- haven::read_dta("2022-04-25-BD-Prepa-UACh.dta")
 ``` 
 
 ```{r}
@@ -85,7 +85,7 @@ library(R2OpenBUGS)
 
 
 ```{r}
-cve_calif <- read_excel("./CLAVES-CALIFICACIONES.xlsx")
+cve_calif <- read_excel("2022-05-07-CLAVES-CALIFICACIONES.xlsx")
 
 ```
 
@@ -96,6 +96,10 @@ cve_calif <- read_excel("./CLAVES-CALIFICACIONES.xlsx")
   
 ```
 
+
+```{r}
+lista_mat <- list()
+```
 
 
 ```{r}
@@ -142,6 +146,11 @@ calif_sem <- calif_sem %>%
 ```{r}
 create_report(calif_sem)
 ```
+
+```{r}
+library(knitr)
+```
+
 
 ```{r}
 calif_sem %>% 
