@@ -9,14 +9,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r}
-install.packages("DataExplorer")
-install.packages("skimr")
-install.packages("readr")
-install.packages("tidyverse")
-install.packages("readxl")
-install.packages("haven")
-install.packages("treemap")
-install.packages("patchwork")
+#install.packages("DataExplorer")
+#install.packages("skimr")
+#install.packages("readr")
+#install.packages("tidyverse")
+#install.packages("readxl")
+#install.packages("haven")
+#install.packages("treemap")
+#install.packages("patchwork")
 ```
 
 
@@ -37,7 +37,7 @@ library(R2OpenBUGS)
 
 
 ```{r}
-data <- haven::read_dta("./2022-04-25-BD-Prepa-UACh.dta")
+data <- haven::read_dta("./Data/2022-04-25-BD-Prepa-UACh.dta")
 ``` 
 
 
@@ -163,8 +163,7 @@ c("ciclo",
 
 
 ```{r}
-cve_calif <- read_excel("./CLAVES-CALIFICACIONES.xlsx")
-
+cve_calif <- read_excel("./Data/2022-05-07-CLAVES-CALIFICACIONES.xlsx")
 ```
 
 ```{r}
@@ -306,10 +305,6 @@ kable( caption = "vigencia por estado" )
 ```
 
 
-
-ggplot(tabla_estado, aes(x = estado, y = vigencia_clv)) +
-  geom_boxplot() +
-  coord_flip()
 
 ```{r}
 ggplot(tabla_estado, aes(x = estado, y = n,colour = vigencia_clv)) +

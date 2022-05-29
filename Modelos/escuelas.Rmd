@@ -22,7 +22,7 @@ install.packages("haven")
 
 ```{r}
 library(DataExplorer)
-#library(skimr)
+library(skimr)
 library(haven)
 ```
 
@@ -164,47 +164,11 @@ calif_sem %>%
 calif_sem %>% 
   group_by( estado, vigencia_clv ) %>%  
   tally() %>%  
-  arrange( desc(estado, vigencia_clv) ) %>%  
+  #arrange( desc(estado, vigencia_clv) ) %>%  
   kable( caption = "vigencia por estado" ) 
 ```
 
 
-```{r}
-
-```
-
-
-```{r}
-df %>% # del data frame completo
-  filter( year == 2000 ) %>%  # selecciona los registros del año 2000
-  summarise( Poblacion = sum( pobHom, pobMuj ) ) %>%  # suma todos los datos de las dos variables
-  kable( caption = "Población Región de Murcia (2000)" ) # mostrar el resultado en una tabla
-```
-
-
-```{r}
-df %>% # del data frame completo
-  group_by( Mun ) %>%  # para cada municipio
-  filter( year == 2000 ) %>%  # selecciona los registros del año 2000
-  summarise( Poblacion = sum( pobHom, pobMuj ) ) %>%  # suma todos los datos de las dos variables
-  arrange( desc(Poblacion) ) %>%  # en orden descendente por la Población
-  kable( caption = "Población en los Municipios (2000)" ) # mostrar el resultado en una tabla
-```
-
-
-```{r}
-df <- # para guardar la nueva variable, se 'asigna' al df  
-  df %>% # del data frame completo
-  mutate( pobTotal = pobHom + pobMuj ) # crea una nueva variable pobTotal que sea la suma de hombres y mujeres
-```
-
-
-```{r}
-df %>% # del data frame completo
-  filter( Mun == "Cieza" ) %>%  # filtra por Cieza
-  summarise( Total = mean(pobTotal), Hombres = mean(pobHom), Mujeres = mean(pobMuj) ) %>% # haz la media de esas variables
-  kable( caption = "Medias poblacionales", digits = 2 ) # presenta el resultado en una tabla
-```
 
 
 
