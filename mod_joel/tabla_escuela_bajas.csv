@@ -1,0 +1,46 @@
+"","estado","escuela","vigencia","n","cveVigencia","cveEstado","totEstado"
+"1","Aguascalientes",1,"Baja",7,1,1,21
+"2","Baja California",1,"Baja",21,1,2,43
+"3","Baja California",2,"Baja",1,1,2,43
+"4","Baja California Sur",1,"Baja",1,1,3,2
+"5","Baja California Sur",2,"Baja",1,1,3,2
+"6","Campeche",1,"Baja",16,1,4,35
+"7","Chiapas",1,"Baja",75,1,5,278
+"8","Chiapas",2,"Baja",1,1,5,278
+"9","Chihuahua",1,"Baja",6,1,6,14
+"10","Ciudad de México",1,"Baja",18,1,7,40
+"11","Ciudad de México",2,"Baja",1,1,7,40
+"12","Colima",1,"Baja",3,1,8,9
+"13","Guanajuato",1,"Baja",26,1,10,115
+"14","Guerrero",1,"Baja",84,1,11,267
+"15","Guerrero",2,"Baja",1,1,11,267
+"16","Hidalgo",1,"Baja",47,1,12,209
+"17","Hidalgo",2,"Baja",1,1,12,209
+"18","Jalisco",1,"Baja",19,1,13,44
+"19","México",1,"Baja",232,1,14,1187
+"20","México",2,"Baja",68,1,14,1187
+"21","Michoacán",1,"Baja",10,1,15,58
+"22","Michoacán",2,"Baja",1,1,15,58
+"23","Morelos",1,"Baja",12,1,16,80
+"24","Morelos",2,"Baja",2,1,16,80
+"25","Nayarit",1,"Baja",22,1,17,69
+"26","Nayarit",2,"Baja",1,1,17,69
+"27","Oaxaca",1,"Baja",375,1,19,1173
+"28","Oaxaca",2,"Baja",7,1,19,1173
+"29","Puebla",1,"Baja",148,1,20,597
+"30","Querétaro",1,"Baja",14,1,21,65
+"31","Querétaro",2,"Baja",1,1,21,65
+"32","Quintana Roo",1,"Baja",7,1,22,18
+"33","San Luis Potosí",1,"Baja",39,1,23,107
+"34","San Luis Potosí",2,"Baja",3,1,23,107
+"35","Sinaloa",1,"Baja",3,1,24,5
+"36","Sonora",1,"Baja",2,1,25,6
+"37","Tabasco",1,"Baja",10,1,26,25
+"38","Tabasco",2,"Baja",1,1,26,25
+"39","Tamaulipas",1,"Baja",14,1,27,29
+"40","Tlaxcala",1,"Baja",13,1,28,46
+"41","Veracruz",1,"Baja",131,1,29,385
+"42","Veracruz",2,"Baja",2,1,29,385
+"43","Yucatán",1,"Baja",6,1,30,12
+"44","Yucatán",2,"Baja",1,1,30,12
+"45","Zacatecas",1,"Baja",9,1,31,38
