@@ -1,0 +1,56 @@
+model
+{
+#Likelihood
+for (i in 1:n) {
+	y[i] ~ dpois(mu[i])
+	mu[i]<-theta[i]*ne[i]
+	log(theta[i])<-alpha+beta1[S[i]]+beta2[I[i]]+beta3[H[i]]+beta4[K[i]]+beta5[M[i]]+beta6[N[i]]+beta7[P[i]]  
+}
+#Priors 
+alpha ~ dnorm(0,0.001)
+for (j in 1:2) { 
+	beta1[j] ~ dnorm(0,0.001) 
+	#gama[j] ~ dnorm(0,0.001) 
+	beta3[j] ~ dnorm(0,0.001) 
+        beta4[j] ~ dnorm(0,0.001)
+        beta5[j] ~ dnorm(0,0.001)
+        beta7[j] ~ dnorm(0,0.001)  
+       
+}
+
+for (k in 1:3) { 
+	beta2[k] ~ dnorm(0,0.001)
+        
+}
+
+for (l in 1:8) { 
+	beta6[l] ~ dnorm(0,0.001) 
+}
+
+
+#Prediction 1
+for (i in 1:n) { yf1[i] ~ dpois(mu[i]) }
+
+#Estimable quantities
+alpha.adj <- alpha+mean(beta1[])+mean(beta2[])+mean(beta3[])+mean(beta4[])+mean(beta5[])+mean(beta6[])+mean(beta7[])
+
+for (j in 1:2) { 
+	beta1.adj[j] <- beta1[j]-mean(beta1[])
+	#gama.adj[j] <- gama[j]-mean(gama[])
+	beta3.adj[j] <- beta3[j]-mean(beta3[])
+        beta4.adj[j] <- beta4[j]-mean(beta4[])
+        beta5.adj[j] <- beta5[j]-mean(beta5[])
+        beta7.adj[j] <- beta7[j]-mean(beta7[])
+       
+}
+
+for (k in 1:3) { 
+	beta2.adj[k] <- beta2[k]-mean(beta2[])
+        
+}
+
+for (l in 1:8) { 
+	beta6.adj[l] <- beta6[l]-mean(beta6[])
+}
+
+}
